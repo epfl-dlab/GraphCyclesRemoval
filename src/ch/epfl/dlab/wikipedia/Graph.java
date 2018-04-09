@@ -22,6 +22,14 @@ public class Graph {
 		return result;
 	}
 
+	public long edgesCount() {
+		long total = 0;
+		for (Node n : nodes.values()) {
+			total += n.parents.size();
+		}
+		return total;
+	}
+
 	public static class Node {
 		public String name;
 

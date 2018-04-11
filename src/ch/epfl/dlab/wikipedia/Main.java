@@ -12,10 +12,15 @@ import java.util.Map;
 
 import ch.epfl.dlab.wikipedia.Graph.Node;
 
+/**
+ * 
+ * @author Tiziano Piccardi <tiziano.piccardi@epfl.ch>
+ *
+ */
 public class Main {
 
 	/************
-	 * Load the graph in memory
+	 * Load the graph in memory. Lines that start with # are ignored
 	 * 
 	 * @param fileName
 	 * @return
@@ -49,6 +54,8 @@ public class Main {
 	 * @throws IOException
 	 */
 	public static void writeGraph(List<Node> sorted, Graph graph, String fileName) throws IOException {
+		
+		// Generate an inverse index: category -> position
 		Map<Node, Integer> position = new HashMap<>();
 		for (int i = 0; i < sorted.size(); i++) {
 			position.put(sorted.get(i), i);
@@ -56,11 +63,15 @@ public class Main {
 
 		FileWriter fw = new FileWriter(new File(fileName));
 		BufferedWriter bw = new BufferedWriter(fw);
+		
+		// For every node, check all the parents (== enumerate all the edges) 
 		for (Node c : graph.nodes.values()) {
 			for (Node parent : c.parents) {
 				try {
 					int nodePosition = position.get(c);
 					int parentPosition = position.get(parent);
+					
+					// if the child appears earlier in the array, I should ignore it
 					if (nodePosition > parentPosition) {
 						bw.write(c.name + "\t" + parent.name);
 						bw.newLine();
@@ -79,6 +90,10 @@ public class Main {
 
 	}
 
+	/**
+	 * Entry point
+	 * @param args
+	 */
 	public static void main(String[] args) {
 
 		if (args.length < 2) {
@@ -87,6 +102,8 @@ public class Main {
 		}
 
 		System.out.println("Running...");
+		
+		// Load the graph
 		Graph graph = null;
 		try {
 			graph = Main.loadGraph(args[0]);
@@ -96,12 +113,14 @@ public class Main {
 		}
 		System.out.println("Graph Loaded...");
 
+		// Apply topological sorting
 		System.out.println("Sorting...");
 		List<Node> sorted = FAS.get(graph);
 		System.out.println("Done.");
 
 		System.out.println("Writing the result in " + args[1]);
 
+		// Write the edges in the file: only the forward links
 		try {
 			writeGraph(sorted, graph, args[1]);
 		} catch (IOException e) {

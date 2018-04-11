@@ -9,10 +9,10 @@ import java.util.Set;
 import ch.epfl.dlab.wikipedia.Graph.Node;
 
 /********
+ * A fast and effective heuristic for the feedback arc set problem
+ * https://www.sciencedirect.com/science/article/pii/002001909390079O
  * 
- * @author tiziano A fast and effective heuristic for the feedback arc set
- *         problem
- *         https://www.sciencedirect.com/science/article/pii/002001909390079O
+ * @author tiziano
  */
 public class FAS {
 
@@ -24,6 +24,7 @@ public class FAS {
 		HashMap<Integer, Set<Node>> byOutdegree = new HashMap<>();
 
 		// SIMPLE CONNECTED == NO SELF CYCLES
+		// Remove self loops
 		for (Node c : graph.nodes.values()) {
 			for (Node child : new HashSet<>(c.children))
 				if (child.equals(c))
@@ -34,7 +35,7 @@ public class FAS {
 		}
 
 		////////////////////////////////
-		// SUUUUUUPER UGLY but efficient
+		// Get max in and out degree
 		int maxIndegree = 0;
 		int maxOutdegree = 0;
 		for (Node c : graph.nodes.values()) {

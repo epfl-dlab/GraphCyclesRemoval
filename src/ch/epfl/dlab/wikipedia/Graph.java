@@ -4,9 +4,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-/***********************
+/**
  * 
- * @author tiziano
+ * @author Tiziano Piccardi <tiziano.piccardi@epfl.ch>
  *
  */
 public class Graph {
